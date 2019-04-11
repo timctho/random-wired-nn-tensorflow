@@ -22,7 +22,7 @@ class NodeOp(object):
             out = tf.squeeze(inputs, axis=-1)
         else:
             self.aggregate_w = tf.Variable(tf.zeros([self.in_degree]))
-            out = tf.tensordot(inputs, self.aggregate_w, [[-1], [0]])
+            out = tf.tensordot(inputs, tf.nn.sigmoid(self.aggregate_w), [[-1], [0]])
 
         out = tf.nn.relu(out)
         out = tf.layers.SeparableConv2D(self.out_channel, 3, self.stride, 'same')(out)
