@@ -1,0 +1,51 @@
+{
+  "Data": {
+    "root_path": "",
+    "num_class": 1000,
+    "input_size": 224,
+    "batch_size": 32
+  },
+  "Augmentation": {
+    "color": true,
+    "affine": true,
+    "flip": true
+  },
+  "Graph": {
+    "mode": "ws",
+    "ws": {
+      "n": 32,
+      "k": 4,
+      "p": 0.75
+    },
+    "num_random_dag_parts": 3,
+    "dag_def": []
+  },
+  "Model": {
+    "base_channel": 32,
+    "weight_decay": 1e-4,
+    "dropout": 0.5
+  },
+  "Train": {
+    "optimizer": "adam",
+    "lr_policy": "step_lr",
+    "step_lr": {
+      "time": [],
+      "value": []
+    },
+    "cos_lr": {
+      "init": 1e-3,
+      "step": 500000,
+      "warmup": 3000
+    },
+    "exp_lr": {
+      "init": 1e-2,
+      "decay_rate": 0.1,
+      "decay_step": 10000
+    }
+  },
+  "Monitor": {
+    "log_step": 500,
+    "ckpt_save_epoch": 2,
+    "max_eval_step": 1000
+  }
+}
