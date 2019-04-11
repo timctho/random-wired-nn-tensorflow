@@ -2,8 +2,9 @@ import tensorflow as tf
 
 
 class RandWire(object):
-    def __init__(self, config):
+    def __init__(self, config, is_training):
         self.base_channel = config['Model']['base_channel']
+        self.is_training = is_training
         self.num_class = config['Data']['num_class']
 
         self.n = self.k = self.p = self.m = 0

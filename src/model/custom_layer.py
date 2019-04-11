@@ -11,11 +11,13 @@ class NodeOp(object):
                  in_degree,
                  in_channel,
                  out_channel,
-                 stride):
+                 stride,
+                 is_trianing):
         self.in_degree = in_degree
         self.in_channel = in_channel
         self.out_channel = out_channel
         self.stride = stride
+        self.is_training = is_trianing
 
     def __call__(self, inputs):
         if self.in_degree == 1:
@@ -25,8 +27,8 @@ class NodeOp(object):
             out = tf.tensordot(inputs, tf.nn.sigmoid(self.aggregate_w), [[-1], [0]])
 
         out = tf.nn.relu(out)
-        out = tf.layers.SeparableConv2D(self.out_channel, 3, self.stride, 'same')(out)
-        out = tf.layers.BatchNormalization()(out)
+        out = tf.layers.separable_conv2d(out, self.out_channel, 3, self.stride, 'same')
+        out = tf.layers.batch_normalization(out, training=self.is_training)
         return out
 
 
@@ -43,9 +45,11 @@ class RandWireLayer(object):
                  m=1,
                  wire_def=None,
                  graph_mode='ws',
+                 is_training=True,
                  name=None):
         self.in_channel = in_channel
         self.out_channel = out_channel
+        self.is_training = is_training
         self.name = name
 
         if wire_def is not None:
@@ -87,8 +91,9 @@ class RandWireLayer(object):
 
                     _out_c = self.out_channel if node_idx in out_idx else self.in_channel
                     _stride = 2 if node_idx in in_idx else 1
-                    out_tensors[node_idx] = NodeOp(cur_indeg, self.in_channel, _out_c, _stride)(
-                        in_tensors)
+                    out_tensors[node_idx] = NodeOp(cur_indeg,
+                                                   self.in_channel,
+                                                   _out_c, _stride, self.is_training)(in_tensors)
 
                 for i in self.G.adj[node_idx]:
                     in_degree[i] -= 1
