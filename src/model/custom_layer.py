@@ -26,14 +26,17 @@ class NodeOp(object):
         if self.in_degree == 1:
             out = tf.squeeze(inputs, axis=-1)
         else:
-            self.aggregate_w = tf.Variable(tf.zeros([self.in_degree]), name='{}_aggre_w'.format(self.name))
+            self.aggregate_w = tf.Variable(tf.zeros([self.in_degree]),
+                                           name='{}_aggre_w'.format(self.name))
             out = tf.tensordot(inputs, tf.nn.sigmoid(self.aggregate_w), [[-1], [0]])
 
         out = tf.nn.relu(out)
         out = tf.layers.separable_conv2d(out, self.out_channel, 3, self.stride, 'same',
-                                         name='{}_sep'.format(self.name), depthwise_regularizer=tf.nn.l2_loss,
+                                         name='{}_sep'.format(self.name),
+                                         depthwise_regularizer=tf.nn.l2_loss,
                                          pointwise_regularizer=tf.nn.l2_loss)
-        out = tf.layers.batch_normalization(out, training=self.is_training, name='{}_bn'.format(self.name))
+        out = tf.layers.batch_normalization(out, training=self.is_training,
+                                            name='{}_bn'.format(self.name))
         return out
 
 
@@ -63,7 +66,7 @@ class RandWireLayer(object):
             self.G = nx.read_adjlist(wire_def, create_using=nx.DiGraph(), nodetype=int)
         else:
             if graph_mode == 'ws':
-                self.G = nx.watts_strogatz_graph(n, k, p)
+                self.G = nx.connected_watts_strogatz_graph(n, k, p)
             elif graph_mode == 'er':
                 self.G = nx.erdos_renyi_graph(n, p, directed=True)
             elif graph_mode == 'ba':

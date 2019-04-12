@@ -16,7 +16,7 @@ from src.util import distribute
 flags.DEFINE_string('config', 'src/config/default.json',
                     help='Path to config file')
 flags.DEFINE_integer('num_gpu', 1,
-                    help='If greater or equal to 2, use distribute training')
+                     help='If greater or equal to 2, use distribute training')
 flags.DEFINE_string('save_path', '',
                     help='Path to save ckpt and logging files')
 flags.DEFINE_string('pretrained', '',
@@ -109,12 +109,21 @@ def get_eval_dataset(config):
         return mnist.eval_input_fn('data', config['Data']['batch_size'])
 
     elif dataset_name == 'imagenet':
-        return imagenet.input_fn(False, config['Data']['root_path'], config['Data']['batch_size'], 1)
+        return imagenet.input_fn(False, config['Data']['root_path'], config['Data']['batch_size'],
+                                 1)
 
 
 def main(_):
     config = load_config(FLAGS.config)
     config['training_graph_path'] = os.path.join(FLAGS.save_path, 'rand_graph')
+
+    dataset_name =  config['Data']['name']
+    if dataset_name == 'mnist':
+        num_train_images = mnist.MNIST_SIZE
+    elif dataset_name == 'imagenet':
+        num_train_images = imagenet.NUM_IMAGES['train']
+    config['Train']['cos_lr']['step'] = num_train_images * config['Train']['epoch'] / \
+                                        config['Data']['batch_size']
 
     if FLAGS.num_gpu > 1:
         # Creates session config. allow_soft_placement = True, is required for
