@@ -13,7 +13,6 @@ from src.util.opt_selector import OptimizerSelector
 from src.util.misc import load_config
 from src.util import distribute
 
-
 flags.DEFINE_string('config', 'src/config/default.json',
                     help='Path to config file')
 flags.DEFINE_string('num_gpu', 1,
@@ -74,8 +73,6 @@ def model_fn(features, labels, mode, params):
     global_step = tf.train.get_or_create_global_step()
     lr = LearningRateSelector(params, global_step).lr
     opt = OptimizerSelector(params, lr).optimizer
-
-
 
     cls_loss = tf.losses.sparse_softmax_cross_entropy(labels, predictions)
     l2_reg_loss = tf.add_n(tf.losses.get_regularization_losses())

@@ -396,8 +396,7 @@ if __name__ == '__main__':
 
             print(np.max(cur_img), np.min(cur_img))
 
-            cv2.imshow('', cur_img[:,:,::-1].astype(np.uint8))
+            cv2.imshow('', cur_img[:, :, ::-1].astype(np.uint8))
             key = cv2.waitKey(0)
             if key == ord('q'):
                 break
-
