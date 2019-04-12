@@ -1,7 +1,7 @@
 {
   "Data": {
     "name": "imagenet",
-    "root_path": "/Tim/Data/ImageNet",
+    "root_path": "/Tim/Data/ImageNet/tfrecords",
     "num_class": 1001,
     "input_size": 224,
     "batch_size": 16
@@ -23,14 +23,14 @@
   },
   "Model": {
     "arch": "small",
-    "base_channel": 64,
+    "base_channel": 78,
     "weight_decay": 5e-5,
     "dropout": 0.5
   },
   "Train": {
-    "epoch": 20,
-    "optimizer": "adam",
-    "lr_policy": "step_lr",
+    "epoch": 100,
+    "optimizer": "sgd",
+    "lr_policy": "cos_lr",
     "step_lr": {
       "time": [
         2000
@@ -53,8 +53,8 @@
     "label_smooth": 0.1
   },
   "Monitor": {
-    "log_step": 500,
-    "ckpt_save_epoch": 1,
+    "log_step": 200,
+    "ckpt_save_epoch": 10,
     "max_eval_step": 1000
   }
 }
