@@ -11,7 +11,17 @@ Tensorflow implementation of [Exploring Randomly Wired Neural Networks for Image
  - Tensorflow 1.13
  - NetworkX
  
- ---
+---
+## Prepare ImageNet TFRecords
+ - Download `ILSVRC2012_img_train.tar` , `ILSVRC2012_img_val.tar` , `synset_labels.txt`
+ - Put in /your_path/to/data
+ ```
+ python src/dataset/imagenet_to_tfrecord.py --raw_data_dir /your_path/to/data
+                                            --local_scratch_dir /path/to/tfrecords
+ ```
+ 
+
+---
 ## Training
 
 ```
@@ -35,6 +45,14 @@ python train.py --config src/config/mnist.json --save_path mnist_example
 <!-- Loss                       |  Top-1 Accuracy -->
 <!-- :-------------------------:|:----------------------------: -->
 ![alt text](assets/mnist_loss.png)   ![](assets/mnist_top1.png)
+
+
+### ImageNet
+
+Set `config['Data']['root_path']` to your imagenet tfrecords folder
+```
+python train.py --config src/config/regular.json --save_path mnist_example
+```
 
 ---
 ## Exported
