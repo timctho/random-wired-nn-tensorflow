@@ -47,9 +47,10 @@ python train.py --config src/config/mnist.json --save_path mnist_example
 ![alt text](assets/mnist_loss.png)   ![](assets/mnist_top1.png)
 
 
-### ImageNet
+### ImageNet Example
 
-Set `config['Data']['root_path']` to your imagenet tfrecords folder
+ - Set `config['Data']['root_path']` to your imagenet tfrecords folder
+ 
 ```
 python train.py --config src/config/regular.json --save_path mnist_example
 ```
