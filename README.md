@@ -5,14 +5,54 @@ Tensorflow implementation of [Exploring Randomly Wired Neural Networks for Image
 
  <img style="float: center;" src="assets/small_regime_randwire.png">
 
-
-### Requirements
+---
+## Requirements
 
  - Tensorflow 1.13
  - NetworkX
  
- 
+ ---
+## Training
 
+```
+train.py:
+  --config: Path to config file
+    (default: 'src/config/default.json')
+  --gpu: GPU ID used
+    (default: '0')
+  --pretrained: Continue training from this pretrained model
+    (default: '')
+  --save_path: Path to save ckpt and logging files
+    (default: '')
+```
+
+### Mnist example
+
+```
+python train.py --config src/config/mnist.json --save_path mnist_example
+```
+
+<!-- Loss                       |  Top-1 Accuracy -->
+<!-- :-------------------------:|:----------------------------: -->
+![alt text](assets/mnist_loss.png)   ![](assets/mnist_top1.png)
+
+---
+## Exported
+
+```
+model_dir
+|-- eval
+|   `-- eval_log
+|-- train_log
+|-- model.ckpt
+`-- rand_graph
+    |-- dag_0.txt
+    |-- dag_1.txt
+    `-- dag_2.txt
+```
+-  Generated random graph adjacency matrix will be saved as text file
+
+---
 ## TODO
 
  - Training on ImageNet
