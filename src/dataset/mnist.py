@@ -26,6 +26,8 @@ import numpy as np
 from six.moves import urllib
 import tensorflow as tf
 
+MNIST_SIZE = 60000
+
 
 def read32(bytestream):
     """Read 4 bytes from bytestream as an unsigned 32-bit integer."""
