@@ -26,7 +26,7 @@ train.py:
     (default: '')
 ```
 
-### Mnist example
+### MNIST Example
 
 ```
 python train.py --config src/config/mnist.json --save_path mnist_example
