@@ -15,7 +15,7 @@ from src.util import distribute
 
 flags.DEFINE_string('config', 'src/config/default.json',
                     help='Path to config file')
-flags.DEFINE_string('num_gpu', 1,
+flags.DEFINE_integer('num_gpu', 1,
                     help='If greater or equal to 2, use distribute training')
 flags.DEFINE_string('save_path', '',
                     help='Path to save ckpt and logging files')

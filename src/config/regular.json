@@ -24,7 +24,7 @@
   "Model": {
     "arch": "regular",
     "base_channel": 79,
-    "weight_decay": 1e-4,
+    "weight_decay": 5e-5,
     "dropout": 0.5
   },
   "Train": {
@@ -45,7 +45,7 @@
       "decay_rate": 0.1,
       "decay_step": 10000
     },
-    "label_smooth": true
+    "label_smooth": 0.1
   },
   "Monitor": {
     "log_step": 500,

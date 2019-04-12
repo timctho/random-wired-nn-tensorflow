@@ -44,7 +44,7 @@
       "decay_rate": 0.1,
       "decay_step": 10000
     },
-    "label_smooth": true
+    "label_smooth": 0.0
   },
   "Monitor": {
     "log_step": 500,
