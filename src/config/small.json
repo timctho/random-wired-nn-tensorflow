@@ -1,5 +1,6 @@
 {
   "Data": {
+    "name": "imagenet",
     "root_path": "",
     "num_class": 1000,
     "input_size": 224,
@@ -48,7 +49,8 @@
       "init": 1e-2,
       "decay_rate": 0.1,
       "decay_step": 10000
-    }
+    },
+    "label_smooth": true
   },
   "Monitor": {
     "log_step": 500,
