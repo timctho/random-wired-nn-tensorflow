@@ -31,7 +31,7 @@ class MnistRandWireNN(RandWire):
 
     def __call__(self, inputs):
         with tf.variable_scope('Conv1'):
-            out = tf.layers.conv2d(inputs, self.base_channel // 2, 3, 1, 'same')
+            out = tf.layers.conv2d(inputs, self.base_channel // 2, 3, 1, 'same', kernel_regularizer=tf.nn.l2_loss)
             out = tf.layers.batch_normalization(out, training=self.is_training)
 
         out = self.rand_wire_layer_0(out)
@@ -40,9 +40,9 @@ class MnistRandWireNN(RandWire):
 
         with tf.variable_scope('Classifier'):
             out = tf.nn.relu(out)
-            out = tf.layers.conv2d(out, 1280, 1)
+            out = tf.layers.conv2d(out, 1280, 1, kernel_regularizer=tf.nn.l2_loss)
             out = tf.layers.batch_normalization(out, training=self.is_training)
             out = tf.reduce_mean(out, axis=[1, 2], keep_dims=True)
-            out = tf.layers.dense(out, self.num_class)
+            out = tf.layers.dense(out, self.num_class, kernel_regularizer=tf.nn.l2_loss)
             out = tf.reshape(out, [-1, self.num_class])
         return out

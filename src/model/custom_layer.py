@@ -30,7 +30,9 @@ class NodeOp(object):
             out = tf.tensordot(inputs, tf.nn.sigmoid(self.aggregate_w), [[-1], [0]])
 
         out = tf.nn.relu(out)
-        out = tf.layers.separable_conv2d(out, self.out_channel, 3, self.stride, 'same', name='{}_sep'.format(self.name))
+        out = tf.layers.separable_conv2d(out, self.out_channel, 3, self.stride, 'same',
+                                         name='{}_sep'.format(self.name), depthwise_regularizer=tf.nn.l2_loss,
+                                         pointwise_regularizer=tf.nn.l2_loss)
         out = tf.layers.batch_normalization(out, training=self.is_training, name='{}_bn'.format(self.name))
         return out
 

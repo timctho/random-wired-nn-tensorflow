@@ -29,7 +29,6 @@ FLAGS = flags.FLAGS
 
 
 def model_fn(features, labels, mode, params):
-
     if mode == tf.estimator.ModeKeys.TRAIN:
         is_training = True
     else:
@@ -51,15 +50,21 @@ def model_fn(features, labels, mode, params):
 
     predictions = model(features)
 
+    def get_loss(pred, labels, params):
+        cls_loss = tf.losses.sparse_softmax_cross_entropy(labels, pred)
+        l2_reg_loss = tf.add_n(tf.losses.get_regularization_losses())
+        loss = cls_loss + params['Model']['weight_decay'] * l2_reg_loss
+        return loss
+
     if mode == tf.estimator.ModeKeys.TRAIN:
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
         with tf.control_dependencies(update_ops):
-            loss = tf.losses.sparse_softmax_cross_entropy(labels, predictions)
+            loss = get_loss(predictions, labels, params)
             train_op = opt.minimize(loss, global_step)
         return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
 
     elif mode == tf.estimator.ModeKeys.EVAL:
-        loss = tf.losses.sparse_softmax_cross_entropy(labels, predictions)
+        loss = get_loss(predictions, labels, params)
         metrics = {
             'Top@1': tf.metrics.accuracy(labels, tf.argmax(predictions, axis=-1)),
             'Top@5': tf.metrics.mean(tf.nn.in_top_k(predictions, labels, 5))
