@@ -28,9 +28,9 @@
     "dropout": 0.5
   },
   "Train": {
-    "epoch": 20,
+    "epoch": 50,
     "optimizer": "sgd",
-    "lr_policy": "step_lr",
+    "lr_policy": "cos_lr",
     "step_lr": {
       "time": [
         10000
@@ -41,7 +41,7 @@
       ]
     },
     "cos_lr": {
-      "init": 1e-3,
+      "init": 1e-2,
       "step": 500000,
       "warmup": 3000
     },
@@ -54,7 +54,7 @@
   },
   "Monitor": {
     "log_step": 500,
-    "ckpt_save_epoch": 1,
+    "ckpt_save_epoch": 5,
     "max_eval_step": 1000
   }
 }

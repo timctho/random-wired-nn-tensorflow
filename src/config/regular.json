@@ -23,20 +23,20 @@
   },
   "Model": {
     "arch": "regular",
-    "base_channel": 79,
+    "base_channel": 109,
     "weight_decay": 5e-5,
     "dropout": 0.5
   },
   "Train": {
-    "epoch": 20,
-    "optimizer": "adam",
-    "lr_policy": "step_lr",
+    "epoch": 100,
+    "optimizer": "sgd",
+    "lr_policy": "cos_lr",
     "step_lr": {
       "time": [],
       "value": []
     },
     "cos_lr": {
-      "init": 1e-3,
+      "init": 1e-1,
       "step": 500000,
       "warmup": 3000
     },
@@ -49,7 +49,7 @@
   },
   "Monitor": {
     "log_step": 500,
-    "ckpt_save_epoch": 2,
+    "ckpt_save_epoch": 10,
     "max_eval_step": 1000
   }
 }

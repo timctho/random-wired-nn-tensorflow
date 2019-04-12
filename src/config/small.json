@@ -41,7 +41,7 @@
       ]
     },
     "cos_lr": {
-      "init": 1e-3,
+      "init": 1e-1,
       "step": 500000,
       "warmup": 3000
     },
