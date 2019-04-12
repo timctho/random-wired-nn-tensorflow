@@ -1,6 +1,7 @@
 import tensorflow as tf
 import networkx as nx
 import logging
+import os
 
 
 class NodeOp(object):
@@ -12,7 +13,9 @@ class NodeOp(object):
                  in_channel,
                  out_channel,
                  stride,
-                 is_trianing):
+                 is_trianing,
+                 name):
+        self.name = name
         self.in_degree = in_degree
         self.in_channel = in_channel
         self.out_channel = out_channel
@@ -23,12 +26,12 @@ class NodeOp(object):
         if self.in_degree == 1:
             out = tf.squeeze(inputs, axis=-1)
         else:
-            self.aggregate_w = tf.Variable(tf.zeros([self.in_degree]))
+            self.aggregate_w = tf.Variable(tf.zeros([self.in_degree]), name='{}_aggre_w'.format(self.name))
             out = tf.tensordot(inputs, tf.nn.sigmoid(self.aggregate_w), [[-1], [0]])
 
         out = tf.nn.relu(out)
-        out = tf.layers.separable_conv2d(out, self.out_channel, 3, self.stride, 'same')
-        out = tf.layers.batch_normalization(out, training=self.is_training)
+        out = tf.layers.separable_conv2d(out, self.out_channel, 3, self.stride, 'same', name='{}_sep'.format(self.name))
+        out = tf.layers.batch_normalization(out, training=self.is_training, name='{}_bn'.format(self.name))
         return out
 
 
@@ -43,17 +46,19 @@ class RandWireLayer(object):
                  k=4,
                  p=0.75,
                  m=1,
+                 stride=2,
                  wire_def=None,
                  graph_mode='ws',
                  is_training=True,
                  name=None):
         self.in_channel = in_channel
         self.out_channel = out_channel
+        self.stride = stride
         self.is_training = is_training
         self.name = name
 
         if wire_def is not None:
-            self.G = nx.read_adjlist(wire_def, create_using=nx.DiGraph())
+            self.G = nx.read_adjlist(wire_def, create_using=nx.DiGraph(), nodetype=int)
         else:
             if graph_mode == 'ws':
                 self.G = nx.watts_strogatz_graph(n, k, p)
@@ -61,7 +66,6 @@ class RandWireLayer(object):
                 self.G = nx.erdos_renyi_graph(n, p, directed=True)
             elif graph_mode == 'ba':
                 self.G = nx.barabasi_albert_graph(n, m)
-
             self.G = nx.DiGraph(self.G.edges)
         self.rev_G = self.G.reverse()
 
@@ -74,8 +78,8 @@ class RandWireLayer(object):
 
         in_degree = [self.G.in_degree(i) for i in range(self.num_nodes)]
         out_tensors = [None for _ in range(self.num_nodes)] + [inputs]
-        out_idx = [i for i in range(self.num_nodes) if self.G.out_degree(i) == 0]
-        in_idx = [i for i in range(self.num_nodes) if in_degree[i] == 0]
+        out_idx = sorted([i for i in range(self.num_nodes) if self.G.out_degree(i) == 0])
+        in_idx = sorted([i for i in range(self.num_nodes) if in_degree[i] == 0])
 
         with tf.variable_scope(self.name):
             queue = in_idx[:]
@@ -90,10 +94,12 @@ class RandWireLayer(object):
                     in_tensors = tf.stack(in_tensors, axis=-1)
 
                     _out_c = self.out_channel if node_idx in out_idx else self.in_channel
-                    _stride = 2 if node_idx in in_idx else 1
+                    _stride = self.stride if node_idx in in_idx else 1
                     out_tensors[node_idx] = NodeOp(cur_indeg,
                                                    self.in_channel,
-                                                   _out_c, _stride, self.is_training)(in_tensors)
+                                                   _out_c, _stride,
+                                                   self.is_training,
+                                                   'Node_{}'.format(node_idx))(in_tensors)
 
                 for i in self.G.adj[node_idx]:
                     in_degree[i] -= 1
@@ -106,4 +112,7 @@ class RandWireLayer(object):
         return outputs
 
     def save_graph(self, path):
+        dir_path = os.path.dirname(path)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
         nx.write_adjlist(self.G, path)

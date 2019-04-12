@@ -1,9 +1,9 @@
 {
   "Data": {
     "root_path": "",
-    "num_class": 1000,
-    "input_size": 224,
-    "batch_size": 32
+    "num_class": 10,
+    "input_size": 28,
+    "batch_size": 64
   },
   "Augmentation": {
     "color": true,
@@ -21,18 +21,23 @@
     "dag_def": []
   },
   "Model": {
-    "arch": "",
+    "arch": "mnist",
     "base_channel": 32,
     "weight_decay": 1e-4,
     "dropout": 0.5
   },
   "Train": {
     "epoch": 20,
-    "optimizer": "adam",
+    "optimizer": "sgd",
     "lr_policy": "step_lr",
     "step_lr": {
-      "time": [],
-      "value": []
+      "time": [
+        10000
+      ],
+      "value": [
+        1e-3,
+        1e-4
+      ]
     },
     "cos_lr": {
       "init": 1e-3,
@@ -47,7 +52,7 @@
   },
   "Monitor": {
     "log_step": 500,
-    "ckpt_save_epoch": 2,
+    "ckpt_save_epoch": 1,
     "max_eval_step": 1000
   }
 }
