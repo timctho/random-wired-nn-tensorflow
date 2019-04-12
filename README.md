@@ -57,3 +57,6 @@ model_dir
 
  - Training on ImageNet
  
+---
+## License
+Apache License 2.0.
