@@ -18,8 +18,8 @@ Tensorflow implementation of [Exploring Randomly Wired Neural Networks for Image
 train.py:
   --config: Path to config file
     (default: 'src/config/default.json')
-  --gpu: GPU ID used
-    (default: '0')
+  --num_gpu: If greater or equal to 2, use distribute training
+    (default: '1')
   --pretrained: Continue training from this pretrained model
     (default: '')
   --save_path: Path to save ckpt and logging files
