@@ -54,7 +54,7 @@
   },
   "Monitor": {
     "log_step": 200,
-    "ckpt_save_epoch": 10,
+    "ckpt_save_epoch": 5,
     "max_eval_step": 1000
   }
 }

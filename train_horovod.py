@@ -37,7 +37,11 @@ def main(_):
     sess_config.gpu_options.visible_device_list = str(hvd.local_rank())
 
     estimator_config = tf.estimator.RunConfig(session_config=sess_config,
-                                              log_step_count_steps=config['Monitor']['log_step'])
+                                              log_step_count_steps=config['Monitor']['log_step'],
+                                              keep_checkpoint_max=100,
+                                              save_checkpoints_steps=config['Monitor'][
+                                                                         'ckpt_save_epoch'] * num_train_images //
+                                                                     config['Data']['batch_size'])
 
     hooks = [
         hvd.BroadcastGlobalVariablesHook(0)

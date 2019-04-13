@@ -117,6 +117,9 @@ class RandWireLayer(object):
         return outputs
 
     def save_graph(self, path):
+        if os.path.exists(path):
+            return
+
         dir_path = os.path.dirname(path)
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
