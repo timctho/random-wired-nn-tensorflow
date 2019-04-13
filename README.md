@@ -6,10 +6,22 @@ Tensorflow implementation of [Exploring Randomly Wired Neural Networks for Image
  <img style="float: center;" src="assets/small_regime_randwire.png">
 
 ---
+## Features
+ - ImageNet tfrecord input pipeline
+ - TF estimator support
+ - Horovod distribute training
+ - Label smoothing
+ - Cosine lr schedule
+ - Weight decay
+ - Small and regular regime in paper
+ - MNIST custom example
+
+---
 ## Requirements
 
  - Tensorflow 1.13
  - NetworkX
+ - Horovod (optional)
  
 ---
 ## Prepare ImageNet TFRecords
@@ -36,7 +48,7 @@ train.py:
     (default: '')
 ```
 
-### MNIST Example
+### MNIST 
 
 ```
 python train.py --config src/config/mnist.json --save_path mnist_example
@@ -47,12 +59,24 @@ python train.py --config src/config/mnist.json --save_path mnist_example
 ![alt text](assets/mnist_loss.png)   ![](assets/mnist_top1.png)
 
 
-### ImageNet Example
+### ImageNet with Tensorflow Estimator
 
  - Set `config['Data']['root_path']` to your imagenet tfrecords folder
  
 ```
 python train.py --config src/config/regular.json --save_path mnist_example
+```
+
+### ImageNet with Horovod
+
+ - Set `config['Data']['root_path']` to your imagenet tfrecords folder
+
+```
+# Generate rand graph first to avoid conflict
+python src/util/generate_rand_graph.py --config src/config/small.json --save_path small_imagenet
+
+# Run horovod command
+horovodrun -np ${num_gpu} -H localhost:${num_gpu} python train_horovod.py.py
 ```
 
 ---
