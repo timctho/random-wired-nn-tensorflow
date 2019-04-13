@@ -1,4 +1,5 @@
 # Randomly Wired Neural Networks
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/exploring-randomly-wired-neural-networks-for/image-classification-on-imagenet)](https://paperswithcode.com/sota/image-classification-on-imagenet?p=exploring-randomly-wired-neural-networks-for)
 
 Tensorflow implementation of [Exploring Randomly Wired Neural Networks for Image Recognition](https://arxiv.org/abs/1904.01569) [Saining Xie, Alexander Kirillov, Ross Girshick, Kaiming He] [Arxiv]
 
