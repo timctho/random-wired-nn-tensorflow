@@ -76,7 +76,7 @@ python train.py --config src/config/regular.json --save_path mnist_example
 python src/util/generate_rand_graph.py --config src/config/small.json --save_path small_imagenet
 
 # Run horovod command
-horovodrun -np ${num_gpu} -H localhost:${num_gpu} python train_horovod.py.py
+horovodrun -np ${num_gpu} -H localhost:${num_gpu} python train_horovod.py
 ```
 
 ---
