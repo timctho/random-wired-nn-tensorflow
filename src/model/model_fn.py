@@ -118,22 +118,22 @@ def horovod_model_fn(features, labels, mode, params):
 
     summary_op = tf.summary.merge_all()
 
-    train_hooks = [
-        hvd.BroadcastGlobalVariablesHook(0),
-        tf.train.LoggingTensorHook({'step': global_step,
-                                    'lr': lr,
-                                    'cls_loss': cls_loss,
-                                    'reg_loss': l2_reg_loss},
-                                   every_n_iter=params['Monitor']['log_step']),
-        tf.train.SummarySaverHook(save_steps=params['Monitor']['log_step'],
-                                  summary_op=summary_op,
-                                  output_dir=params['save_path'])
-    ]
+    train_hooks = []
+    if hvd.rank() == 0:
+        train_hooks.extend([
+            tf.train.LoggingTensorHook({'step': global_step,
+                                        'lr': lr,
+                                        'cls_loss': cls_loss,
+                                        'reg_loss': l2_reg_loss},
+                                       every_n_iter=params['Monitor']['log_step']),
+            tf.train.SummarySaverHook(save_steps=params['Monitor']['log_step'],
+                                      summary_op=summary_op,
+                                      output_dir=params['save_path'])
+        ])
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
         with tf.control_dependencies(update_ops):
             train_op = opt.minimize(loss, global_step)
-        return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op, training_hooks=train_hooks)
-
-
+        return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op,
+                                          training_hooks=train_hooks)

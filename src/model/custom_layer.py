@@ -62,6 +62,7 @@ class RandWireLayer(object):
         self.name = name
 
         if wire_def is not None:
+            tf.logging.info('Load graph from {}'.format(wire_def))
             self.G = nx.read_adjlist(wire_def, create_using=nx.DiGraph(), nodetype=int)
         else:
             if graph_mode == 'ws':
@@ -112,7 +113,7 @@ class RandWireLayer(object):
 
             with tf.variable_scope('Aggregate_out'):
                 outputs = [out_tensors[i] for i in out_idx]
-                outputs = tf.reduce_mean(tf.stack(outputs, axis=0), axis=0, keep_dims=False)
+                outputs = tf.reduce_mean(tf.stack(outputs, axis=0), axis=0, keepdims=False)
         return outputs
 
     def save_graph(self, path):

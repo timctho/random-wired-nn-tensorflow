@@ -30,7 +30,7 @@ NUM_IMAGES = {
 }
 
 _NUM_TRAIN_FILES = 1024
-_SHUFFLE_BUFFER = 10000
+_SHUFFLE_BUFFER = 1000
 
 DATASET_NAME = 'ImageNet'
 
@@ -319,7 +319,7 @@ def process_record_dataset(dataset,
     # critical training path. Setting buffer_size to tf.contrib.data.AUTOTUNE
     # allows DistributionStrategies to adjust how many batches to fetch based
     # on how many devices are present.
-    dataset = dataset.prefetch(buffer_size=1000)
+    dataset = dataset.prefetch(buffer_size=512)
 
     return dataset
 
@@ -364,7 +364,7 @@ def get_synth_input_fn(height, width, num_channels, num_classes,
             dtype=tf.int32,
             name='synthetic_labels')
         data = tf.data.Dataset.from_tensors((inputs, labels)).repeat()
-        data = data.prefetch(1000)
+        data = data.prefetch(512)
         return data
 
     return input_fn

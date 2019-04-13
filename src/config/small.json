@@ -4,7 +4,7 @@
     "root_path": "/Tim/Data/ImageNet/tfrecords",
     "num_class": 1001,
     "input_size": 224,
-    "batch_size": 16
+    "batch_size": 64
   },
   "Augmentation": {
     "color": true,

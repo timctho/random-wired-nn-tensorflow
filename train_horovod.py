@@ -10,8 +10,6 @@ from src.util.misc import load_config
 
 flags.DEFINE_string('config', 'src/config/small.json',
                     help='Path to config file')
-flags.DEFINE_integer('num_gpu', 2,
-                     help='If greater or equal to 2, use distribute training')
 flags.DEFINE_string('save_path', 'small_imagenet',
                     help='Path to save ckpt and logging files')
 flags.DEFINE_string('pretrained', '',
@@ -41,6 +39,10 @@ def main(_):
     estimator_config = tf.estimator.RunConfig(session_config=sess_config,
                                               log_step_count_steps=config['Monitor']['log_step'])
 
+    hooks = [
+        hvd.BroadcastGlobalVariablesHook(0)
+    ]
+
     estimator = tf.estimator.Estimator(
         model_fn=horovod_model_fn,
         model_dir=FLAGS.save_path if hvd.rank() == 0 else None,
@@ -48,7 +50,7 @@ def main(_):
         params=config)
 
     for _ in range(config['Train']['epoch'] // config['Monitor']['ckpt_save_epoch'] // hvd.size()):
-        estimator.train(input_fn=lambda: get_train_dataset(config))
+        estimator.train(input_fn=lambda: get_train_dataset(config), hooks=hooks)
         if hvd.rank() == 0:
             estimator.evaluate(input_fn=lambda: get_eval_dataset(config))
 

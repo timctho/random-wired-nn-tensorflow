@@ -27,7 +27,7 @@ class SmallRandWireNN(RandWire):
             self.graph_def[2], graph_mode=config['Graph']['mode'], name='RandWire_2',
             is_training=is_training)
 
-        if is_training:
+        if is_training and len(os.listdir(config['training_graph_path'])) == 0:
             self.rand_wire_layer_0.save_graph(
                 os.path.join(config['training_graph_path'], 'dag_0.txt'))
             self.rand_wire_layer_1.save_graph(
