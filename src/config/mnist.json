@@ -24,7 +24,7 @@
   "Model": {
     "arch": "mnist",
     "base_channel": 32,
-    "weight_decay": 1e-4,
+    "weight_decay": 5e-5,
     "dropout": 0.5
   },
   "Train": {

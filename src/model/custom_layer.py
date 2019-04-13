@@ -1,6 +1,5 @@
 import tensorflow as tf
 import networkx as nx
-import logging
 import os
 
 
@@ -78,7 +77,7 @@ class RandWireLayer(object):
         self.num_nodes = self.G.number_of_nodes()
         self.num_edges = self.G.number_of_edges()
 
-        logging.info(
+        tf.logging.info(
             'Create DAG with {} nodes and {} edges'.format(self.num_nodes, self.num_edges))
 
         in_degree = [self.G.in_degree(i) for i in range(self.num_nodes)]
